@@ -78,6 +78,7 @@ class TimerElement:
         return sep.join(str_list)
 
     def now_format(self, digit=0, str_format='{}d+{}:{}:{}'):
+        digit = int(digit)
         now_second = self.now_digit(digit)
         now_list = [round(now_second % 60, digit)]
         unit_list = str_format.split('{}')
@@ -89,8 +90,15 @@ class TimerElement:
         now_list.append((now_hour - now_list[2]) // 24)
         while len(now_list) > 1 and now_list[-1] == 0:
             now_list.pop()
-        str_list = ["{:2>0d}{}".format(now_list[_], unit_list[-_ - 1]) for _ in range(len(now_list) - 1, 0, -1)] + [f"{{:.{digit}f}}{{}}".format(now_list[0], unit_list[-1])]
+        if digit == 0:
+            format_text = "{:0>2.0f}{}"
+        else:
+            format_text = "{:0>" + str(digit + 3) + "." + str(digit) + "f}{}"
+        str_list = ["{:2>0d}{}".format(now_list[_], unit_list[-_ - 1]) for _ in range(len(now_list) - 1, 0, -1)] + [format_text.format(now_list[0], unit_list[-1])]
         return start + ''.join(str_list)
+
+    def delete(self):
+        Timer.delete(self.__key)
 
 
 class Timer:
@@ -105,44 +113,8 @@ class Timer:
         return cls.__timer.get(item, *args)
 
     @classmethod
-    def start(cls, key):
-        cls.get(key).start()
-
-    @classmethod
-    def stop(cls, key):
-        return cls.get(key).stop()
-
-    @classmethod
-    def set_flag(cls, key, flag_name='__default__'):
-        return cls.get(key).set_flag(flag_name)
-
-    @classmethod
-    def get_flag(cls, key, flag_name='__default__'):
-        return cls.get(key).get_flag(flag_name)
-
-    @classmethod
-    def now(cls, key):
-        return cls.get(key).now
-
-    @classmethod
-    def check_time(cls, key, check_time):
-        return cls.get(key).check_time(check_time)
-
-    @classmethod
-    def check_interval(cls, key, check_time):
-        return cls.get(key).check_interval(check_time)
-
-    @classmethod
-    def now_digit(cls, key, digit=2):
-        return cls.get(key).now_digit(digit)
-
-    @classmethod
-    def now_str(cls, key, digit=2, sep=''):
-        return cls.get(key).now_str(digit, sep)
-
-    @classmethod
-    def now_format(cls, key, digit=2, str_format='{}d+{}:{}:{}'):
-        return cls.get(key).now_format(digit, str_format)
+    def delete(cls, item):
+        Timer.__timer.pop(item)
 
 
 if __name__ == '__main__':
