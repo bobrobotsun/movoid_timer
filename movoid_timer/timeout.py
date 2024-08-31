@@ -96,7 +96,6 @@ class Timeout:
                 this_loop_time = self.now_timeout.with_time
                 if this_loop_time is None:
                     this_loop_time = 0 if self.last_0_when_no_with else self.now_timeout.end()
-                print(self.index, this_loop_time)
                 self.time_last += this_loop_time
             else:
                 this_loop_time = self.now_timeout.end()

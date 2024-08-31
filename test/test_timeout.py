@@ -85,7 +85,7 @@ class Test_Timeout:
         timeout = Timeout(1, 0, True, True)
         try:
             for v in timeout:
-                if v.index % 2 == 0:
+                if v.index % 2 == 1:
                     with v:
                         time.sleep(0.1)
                         raise Exception
