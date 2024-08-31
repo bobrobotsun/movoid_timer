@@ -7,6 +7,4 @@
 # Description   : 
 """
 from .timer import Timer
-
-if __name__ == '__main__':
-    pass
+from .timeout import Timeout

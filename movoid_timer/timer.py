@@ -115,7 +115,3 @@ class Timer:
     @classmethod
     def delete(cls, item):
         Timer.__timer.pop(item)
-
-
-if __name__ == '__main__':
-    pass
