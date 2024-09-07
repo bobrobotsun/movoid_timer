@@ -118,7 +118,7 @@ class Test_Timeout:
     def test_timeout_break(self):
         timeout = Timeout(1, 0.1)
         for v in timeout:
-            v.should_pass=False
+            v.should_pass = False
             if v.index >= 5:
                 break
         assert timeout.index == 5
@@ -131,3 +131,15 @@ class Test_Timeout:
                 pass
         assert timeout.index == 0
         assert len(timeout) == 1
+
+    def test_timeout_error_text(self):
+        check_text = '这里进行了一段很奇怪的动作'
+        timeout = Timeout(1, 0.1, check_text=check_text)
+        try:
+            for v in timeout:
+                with v:
+                    raise Exception
+        except TimeoutError as err:
+            assert check_text in str(err)
+        else:
+            raise AssertionError

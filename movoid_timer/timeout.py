@@ -67,7 +67,7 @@ class Timeout:
     :param last_0_when_no_with:如果循环中没有调用with，那么认为就是跑了0秒。如果置为False，那么将使用本次loop的时间作为with持续时间
     """
 
-    def __init__(self, timeout: float = 60, interval=1, only_with=False, last_0_when_no_with=True):
+    def __init__(self, timeout: float = 60, interval=1, only_with=False, last_0_when_no_with=True, check_text=None):
         self.timeout = timeout
         self.interval = interval
         self.only_with = only_with
@@ -77,6 +77,7 @@ class Timeout:
         self.time_start = time.time()
         self.for_time = None  # 最后一次完成的for in究竟结算了多久的时间
         self.total_time = None  # 最后一次完成的for in究竟运行了多久
+        self.check_text = '' if check_text is None else f'【{check_text}】失败，'
 
     def __iter__(self):
         self.elements = []
@@ -129,7 +130,7 @@ class Timeout:
         if should_pass:
             raise StopIteration
         else:
-            raise TimeoutError(f'循环耗时{self.for_time:.3f}秒，共计耗时{self.total_time:.3f}秒，已经超过时限{self.timeout}秒，最小间隔{self.interval}秒')
+            raise TimeoutError(f'{self.check_text}循环监控耗时{self.for_time:.3f}秒，共计耗时{self.total_time:.3f}秒，已经超过时限{self.timeout}秒，最小间隔{self.interval}秒')
 
     @staticmethod
     def sleep(sleep_time: float = 0):
